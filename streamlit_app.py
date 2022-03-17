@@ -39,11 +39,7 @@ ORDERS = {
 
 @st.cache
 def load_data():
-    return pd.read_csv("pulse_survey_sampled.csv", dtype={
-        "age": pd.Int64Dtype(), 
-        "hhld_num_persons": pd.Int64Dtype(),
-        "food_spending_unprepared": pd.Int64Dtype(), 
-        "food_spending_prepared": pd.Int64Dtype()})
+    return pd.read_csv("pulse_survey_sampled.csv")
 
 @st.cache
 def get_slice_membership(df, genders=None, educations=None, races=None, age_range=None, marital_status=None, income=None):
@@ -142,7 +138,7 @@ with st.expander("Demographic slicing"):
         income = st.multiselect('Income', INCOME_ORDER)
     with cols[2]:
         races = st.multiselect('Race', df['race'].unique())
-    age_range = st.slider('Age', min_value=df['age'].min(), max_value=df['age'].max(), value=(df['age'].min(), df['age'].max()))
+    age_range = st.slider('Age', min_value=int(df['age'].min()), max_value=int(df['age'].max()), value=(int(df['age'].min()), int(df['age'].max())))
 
     slice_labels = get_slice_membership(df, genders, educations, races, age_range, marital_status, income)
     slice_labels.name = "slice_membership"
