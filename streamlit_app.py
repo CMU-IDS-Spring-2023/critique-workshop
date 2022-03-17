@@ -39,7 +39,7 @@ ORDERS = {
 
 @st.cache
 def load_data():
-    return pd.read_csv("pulse_survey_sampled.csv")
+    return pd.read_csv("pulse_survey_sampled.csv", dtype={"age": int, "hhld_num_persons": int, "food_spending_unprepared": int, "food_spending_prepared": int})
 
 @st.cache
 def get_slice_membership(df, genders=None, educations=None, races=None, age_range=None, marital_status=None, income=None):
