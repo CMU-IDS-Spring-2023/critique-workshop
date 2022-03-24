@@ -50,6 +50,10 @@ def load_data():
     return pd.read_csv("pulse_survey_sampled.csv")
 
 @st.cache
+def convert_df(df):
+     # IMPORTANT: Cache the conversion to prevent computation on every rerun
+     return df.to_csv().encode('utf-8')
+ 
 def get_slice_membership(df, genders=None, educations=None, races=None, age_range=None, marital_status=None, income=None):
     labels = pd.Series([1] * len(df), index=df.index)
     if genders:
@@ -118,10 +122,11 @@ each qualifying dependent, including adult dependents.
 
 In this workshop, you will be using an extended version of the Household Pulse
 Survey dataset, which you may recognize from the Interactivity Lab. The dataset
-now includes survey responses from three two-week time periods:
+now includes survey responses from four two-week time periods:
 
 * Week 20: November 25 - December 7 2020 *(8 months after the first EIP, just before the second EIP)*
 * Week 25: February 17 - March 1 *(two months after the second EIP, just before the third EIP)*
+* Week 27: March 17 - March 29 *(two months after the second EIP, during the third EIP rollout)*
 * Week 28: April 14 - April 26 *(one month after the third EIP)*
 
 Unfortunately, some data on who had received the first round of EIPs is unavailable in Week 20.
@@ -149,6 +154,17 @@ with st.expander("Demographic slicing"):
 
     slice_labels = get_slice_membership(df, genders, educations, races, age_range, marital_status, income)
     slice_labels.name = "slice_membership"
+
+with st.expander("Choose weeks"):
+    st.write("""
+The weeks you choose to display can have a big impact on the
+trends you see. In particular, notice that Receipt of EIP question asks whether 
+respondents received a check *in the last seven days*. How might the weeks in 
+which you collect that data influence that trend?""")
+    weeks_to_show = st.multiselect("Weeks to show", df['week'].unique())
+
+    if weeks_to_show:
+        slice_labels &= df['week'].isin([int(w) for w in weeks_to_show])
 
 if slice_labels.sum() < len(df):
     st.info("{}/{} ({:.1f}%) individuals match the selected conditions.".format(slice_labels.sum(), len(df), slice_labels.sum() / len(df) * 100))
@@ -203,6 +219,10 @@ demographic groups.""")
     
 if chart:
     st.altair_chart(chart)
+    st.download_button("Download Data",
+                       data=convert_df(plot_df),
+                       file_name='spending_source_data.csv',
+                       mime='text/csv')
 
 
 
@@ -244,6 +264,10 @@ more compelling story.""")
     
 if chart:
     st.altair_chart(chart)
+    st.download_button("Download Data",
+                       data=convert_df(plot_df),
+                       file_name='spending_habit_reasons.csv',
+                       mime='text/csv')
 
 
 with st.expander("Food spending habits"):
@@ -279,6 +303,11 @@ if show_unprepared:
         if breakdown != 'none':
             ci_chart = ci_chart.encode(color=alt.Color(f"{breakdown}:{ENCODINGS.get(breakdown, 'O')}", sort=ORDERS.get(breakdown, 'ascending')))
         chart = chart + ci_chart
+    st.download_button("Download Unprepared Food Data",
+                       data=convert_df(plot_df),
+                       file_name='unprepared_food_data.csv',
+                       mime='text/csv')
+
         
 if show_prepared:
     plot_df = df.loc[~pd.isna(df[breakdown]), ['food_spending_prepared', breakdown, 'week']] if breakdown != 'none' else df[['food_spending_prepared', 'week']]
@@ -298,6 +327,11 @@ if show_prepared:
         new_chart = new_chart + ci_chart
     if chart is not None: chart = chart | new_chart
     else: chart = new_chart
+    st.download_button("Download Prepared Food Data",
+                       data=convert_df(plot_df),
+                       file_name='prepared_food_data.csv',
+                       mime='text/csv')
+
 
 if chart:
     st.altair_chart(chart)        
@@ -312,8 +346,9 @@ if chart:
 with st.expander("Receipt of EIP"):
     st.write("""
 This data is a simple indication of how many people have received a stimulus
-check at each time point. *Hint:* The data might tell a different story
-depending on whether you choose to plot as percentages or as raw counts.""")
+check **within the last 7 days** of each time point. *Hint:* The data might tell
+a different story depending on whether you choose to plot as percentages or as
+raw counts.""")
     chart = None
     cols = st.columns(2)
     field = 'received_EIP'
@@ -385,6 +420,10 @@ depending on whether you choose to plot as percentages or as raw counts.""")
 
 if chart is not None:
     st.altair_chart(chart)
+    st.download_button("Download Data",
+                       data=convert_df(data_to_show),
+                       file_name='eip_receipt_data.csv',
+                       mime='text/csv')
 
 
 
@@ -425,6 +464,10 @@ spending targets to tell a more focused story with your chart.""")
         
 if show_chart:
     st.altair_chart(chart)
+    st.download_button("Download Data",
+                       data=convert_df(plot_df),
+                       file_name='spending_targets_data.csv',
+                       mime='text/csv')
 
 
 
@@ -433,7 +476,9 @@ with st.expander("Mental health data"):
 The dataset includes four features indicating people's mental health status during
 each time period: anxiety, frequent worry, feeling down and depressed, and having
 little interest in doing things. For each feature, respondents rated their
-feelings from 1-4, where 1 indicates very infrequent and 4 indicates very frequent.""")
+feelings from 1-4, where 1 indicates very infrequent and 4 indicates very frequent.
+If you show the data as a line chart, the values plotted are the average ratings
+ranging from 1 to 4.""")
     chart = None
     cols = st.columns(2)
     with cols[0]:
@@ -501,6 +546,10 @@ feelings from 1-4, where 1 indicates very infrequent and 4 indicates very freque
 
 if chart is not None:
     st.altair_chart(chart)
+    st.download_button("Download Data",
+                       data=convert_df(data_to_show),
+                       file_name='mental_health_data.csv',
+                       mime='text/csv')
 
 
 
