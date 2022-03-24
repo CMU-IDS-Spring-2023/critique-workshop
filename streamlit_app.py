@@ -37,6 +37,14 @@ ORDERS = {
     "marital_status": MARITAL_STATUS_ORDER
 }
 
+ENCODINGS = {
+    "income": "O",
+    "gender": "N",
+    "age_group": "O",
+    "marital_status": "N",
+    "race": "N"
+}
+
 @st.cache
 def load_data():
     return pd.read_csv("pulse_survey_sampled.csv")
@@ -75,7 +83,8 @@ df = load_data()
 st.title("Are Economic Impact Payments effective?")
 
 st.write("""
-The Economic Impact Payments (EIP) are direct relief payments paid directly to
+The Economic Impact Payments (EIP), also known as the stimulus checks, are
+direct relief payments paid directly to
 Americans during the COVID-19 crisis. In this Critique Workshop, you will
 select and/or develop visualizations to construct an argument about **whether or
 not the EIPs have been effective at supporting Americans, and if similar
@@ -109,15 +118,13 @@ each qualifying dependent, including adult dependents.
 
 In this workshop, you will be using an extended version of the Household Pulse
 Survey dataset, which you may recognize from the Interactivity Lab. The dataset
-has been augmented to include survey responses from three two-week time periods:
+now includes survey responses from three two-week time periods:
 
-* Week 20: November 25 - December 7
-* Week 25: February 17 - March 1
-* Week 28: April 14 - April 26
+* Week 20: November 25 - December 7 2020 *(8 months after the first EIP, just before the second EIP)*
+* Week 25: February 17 - March 1 *(two months after the second EIP, just before the third EIP)*
+* Week 28: April 14 - April 26 *(one month after the third EIP)*
 
-Note that Week 20 was conducted before the second round of EIPs, while Week 25
-was conducted before the third round of EIPs. Unfortunately, data on who had
-received the first round of EIPs is missing in Week 20.
+Unfortunately, some data on who had received the first round of EIPs is unavailable in Week 20.
 """)
 
 st.header("Slice Data")
@@ -155,9 +162,16 @@ Browse the following sections to find data features and trends that you can use
 to construct your argument. Note that which data features and subsets you show
 or hide can have a significant effect on the story each visualization tells, so
 choose carefully.
+
+To show/hide charts, click into the expander and check the box labeled "Show chart".
 """)
 
 with st.expander("Spending sources"):
+    st.write("""
+This data shows the various sources from which survey respondents' spending money 
+came from. Participants could select multiple responses. *Hint:* Try selecting an 
+additional breakdown to highlight differences in spending sources between different 
+demographic groups.""")
     chart = None
     cols = st.columns(2)
     with cols[0]:
@@ -166,7 +180,7 @@ with st.expander("Spending sources"):
     with cols[1]:
         breakdown = st.checkbox("Breakdown by week", value=True, key='spending_source_breakdown_checkbox')
         layering = st.selectbox("Additional breakdown",
-                                ["none", "income", "gender", "age_group", "marital_status", "hhld_num_persons", "received_EIP"],
+                                ["none", "income", "gender", "race", "age_group", "marital_status", "hhld_num_persons", "received_EIP"],
                                 index=0,
                                 key='spending_source_breakdown_select')
     
@@ -193,6 +207,12 @@ if chart:
 
 
 with st.expander("Reasons for changing spending habits"):
+    st.write("""
+This data provides answers as to why people might have changed their spending
+habits in recent weeks. Notice that the reasons are paired, for example "Concerns
+about the economy" is paired with "No longer concerned about the economy."
+*Hint:* showing a smaller subset of reasons may result in a chart that tells a
+more compelling story.""")
     chart = None
     cols = st.columns(2)
     with cols[0]:
@@ -201,7 +221,7 @@ with st.expander("Reasons for changing spending habits"):
     with cols[1]:
         breakdown = st.checkbox("Breakdown by week", value=True, key='spending_change_breakdown_checkbox')
         layering = st.selectbox("Additional breakdown",
-                                ["none", "income", "gender", "age_group", "marital_status", "hhld_num_persons", "received_EIP"],
+                                ["none", "income", "gender", "race", "age_group", "marital_status", "hhld_num_persons", "received_EIP"],
                                 index=0,
                                 key='spending_change_breakdown_select')
     
@@ -227,6 +247,12 @@ if chart:
 
 
 with st.expander("Food spending habits"):
+    st.write("""
+This data indicates how many dollars respondents spent on unprepared food (such 
+as groceries) as well as prepared food (e.g. restaurants). Checking the standard
+error checkbox will show error bands that are larger when there is a smaller
+sample size for the particular group. Showing these error bands may help to cast
+skepticism on the trends.""")
     cols = st.columns(3)
     with cols[0]:
         show_unprepared = st.checkbox("Spending on Unprepared Food")
@@ -234,7 +260,7 @@ with st.expander("Food spending habits"):
         show_prepared = st.checkbox("Spending on Prepared Food")
     with cols[2]:
         show_ci = st.checkbox("Show Standard Error")
-    breakdown = st.selectbox("Breakdown by", ["none", "income", "gender", "age_group", "marital_status", "hhld_num_persons", "received_EIP"], index=0)
+    breakdown = st.selectbox("Breakdown by", ["none", "income", "gender", "race", "age_group", "marital_status", "hhld_num_persons", "received_EIP"], index=0)
 
 chart = None
 if show_unprepared:
@@ -244,14 +270,14 @@ if show_unprepared:
         y='mean(food_spending_unprepared)'
     ).properties(width=300)
     if breakdown != 'none':
-        chart = chart.encode(color=alt.Color(f'{breakdown}:O', sort=ORDERS.get(breakdown, 'ascending')))
+        chart = chart.encode(color=alt.Color(f"{breakdown}:{ENCODINGS.get(breakdown, 'O')}", sort=ORDERS.get(breakdown, 'ascending')))
     if show_ci:
         ci_chart = alt.Chart(plot_df).mark_errorband(extent='stderr').encode(
             x='week:O',
             y='food_spending_unprepared'
         )
         if breakdown != 'none':
-            ci_chart = ci_chart.encode(color=alt.Color(f'{breakdown}:O', sort=ORDERS.get(breakdown, 'ascending')))
+            ci_chart = ci_chart.encode(color=alt.Color(f"{breakdown}:{ENCODINGS.get(breakdown, 'O')}", sort=ORDERS.get(breakdown, 'ascending')))
         chart = chart + ci_chart
         
 if show_prepared:
@@ -261,14 +287,14 @@ if show_prepared:
         y='mean(food_spending_prepared)'
     ).properties(width=300)
     if breakdown != 'none':
-        new_chart = new_chart.encode(color=alt.Color(f'{breakdown}:O', sort=ORDERS.get(breakdown, 'ascending')))
+        new_chart = new_chart.encode(color=alt.Color(f"{breakdown}:{ENCODINGS.get(breakdown, 'O')}", sort=ORDERS.get(breakdown, 'ascending')))
     if show_ci:
         ci_chart = alt.Chart(plot_df).mark_errorband(extent='stderr').encode(
             x='week:O',
             y='food_spending_prepared'
         )
         if breakdown != 'none':
-            ci_chart = ci_chart.encode(color=alt.Color(f'{breakdown}:O', sort=ORDERS.get(breakdown, 'ascending')))
+            ci_chart = ci_chart.encode(color=alt.Color(f"{breakdown}:{ENCODINGS.get(breakdown, 'O')}", sort=ORDERS.get(breakdown, 'ascending')))
         new_chart = new_chart + ci_chart
     if chart is not None: chart = chart | new_chart
     else: chart = new_chart
@@ -284,41 +310,75 @@ if chart:
 
 
 with st.expander("Receipt of EIP"):
+    st.write("""
+This data is a simple indication of how many people have received a stimulus
+check at each time point. *Hint:* The data might tell a different story
+depending on whether you choose to plot as percentages or as raw counts.""")
     chart = None
     cols = st.columns(2)
     field = 'received_EIP'
     with cols[0]:
         show_chart = st.checkbox("Show receipt of EIP chart")
+        percentage = st.checkbox("Show as percentage", value=True)
     with cols[1]:
         breakdown = st.checkbox("Breakdown by week", value=True, key='eip_receipt_breakdown_checkbox')
-    layering = st.selectbox("Stacking",
-                            ["none", "income", "gender", "age_group", "marital_status", "hhld_num_persons"],
-                            index=0,
-                            key='eip_receipt_breakdown_select')
-    
+    cols = st.columns(2)
+    with cols[0]:
+        values_to_show = st.selectbox("Values to show", ["Both", "Received EIP", "Did not receive EIP"])
+    with cols[1]:
+        layering = st.selectbox("Additional breakdown",
+                                ["none", "income", "gender", "race", "age_group", "marital_status", "hhld_num_persons"],
+                                index=0,
+                                key='eip_receipt_breakdown_select')
+            
     if show_chart:
-        chart = alt.Chart().mark_bar().encode(
-            y=field,
-            x='count()',
-            row='week:N'
-        )
-        chart = alt.Chart(df[[field, 'week'] + ([layering] if layering != 'none' else [])]).mark_bar()
+        data_to_show = df[~pd.isna(df[field])]
+        single_value = values_to_show != 'Both'
+        if values_to_show.startswith("Did not"):
+            data_to_show = df.copy()
+            field = "did_not_receive_EIP"
+            data_to_show[field] = ~(data_to_show["received_EIP"].astype(bool))
+        
+        count_field = 'val_count' if not percentage else 'val_fraction'
+        data_to_show = (data_to_show
+                        .groupby(['week'] + ([layering] if layering != 'none' else []))[field]
+                        .value_counts(normalize=percentage)
+                        .reset_index(name=count_field))
+        if single_value:
+            data_to_show = data_to_show[data_to_show[field]]
+        
+        chart = alt.Chart(data_to_show).mark_bar()
+        if percentage:
+            chart = chart.transform_calculate(
+                val_percentage=f"100 * datum.{count_field}",
+            )
+            count_field = 'val_percentage'
+        count_field = count_field + ':Q'
         if breakdown:
             chart = chart.encode(
                 y=field,
-                x='count()',
-                row='week:N',
-                tooltip=['week', field, 'count()']
+                x=count_field,
+                tooltip=['week', field, count_field]
             )
+            if single_value:
+                chart = chart.encode(row='week:N')
+            else:
+                chart = chart.encode(column='week:N')
         else:
             chart = chart.encode(
                 y=field,
-                x='count()',
-                tooltip=[field, 'count()']
+                x=count_field,
+                tooltip=[field, count_field]
             )
         if layering != 'none':
-            chart = chart.encode(color=alt.Color(f'{layering}:O', sort=ORDERS.get(layering, 'ascending')),
-                                 tooltip=[layering, field, 'count()'] + (['week'] if breakdown else []))
+            if single_value:
+                chart = chart.encode(y=alt.Y(f"{layering}:{ENCODINGS.get(layering, 'O')}", sort=ORDERS.get(layering, 'ascending')),
+                                     color='week:N',
+                                     tooltip=[layering, field, count_field] + (['week'] if breakdown else []))
+            else:
+                chart = chart.encode(row=alt.Color(f"{layering}:{ENCODINGS.get(layering, 'O')}", sort=ORDERS.get(layering, 'ascending')),
+                                     color='week:N',
+                                    tooltip=[layering, field, count_field] + (['week'] if breakdown else []))
         elif breakdown:
             chart = chart.encode(color='week:N')
 
@@ -329,6 +389,10 @@ if chart is not None:
 
 
 with st.expander("EIP spending targets"):
+    st.write("""
+These data shed light on how people are spending money from stimulus checks.
+Respondents could select multiple choices. *Hint:* Try selecting just a few
+spending targets to tell a more focused story with your chart.""")
     chart = None
     cols = st.columns(2)
     with cols[0]:
@@ -337,7 +401,7 @@ with st.expander("EIP spending targets"):
     with cols[1]:
         breakdown = st.checkbox("Breakdown by week", value=True, key='spending_target_breakdown_checkbox')
         layering = st.selectbox("Additional breakdown",
-                                ["none", "income", "gender", "age_group", "marital_status", "hhld_num_persons"],
+                                ["none", "income", "gender", "race", "age_group", "marital_status", "hhld_num_persons"],
                                 index=0,
                                 key='spending_target_breakdown_select')
     
@@ -365,38 +429,75 @@ if show_chart:
 
 
 with st.expander("Mental health data"):
+    st.write("""
+The dataset includes four features indicating people's mental health status during
+each time period: anxiety, frequent worry, feeling down and depressed, and having
+little interest in doing things. For each feature, respondents rated their
+feelings from 1-4, where 1 indicates very infrequent and 4 indicates very frequent.""")
     chart = None
     cols = st.columns(2)
     with cols[0]:
         show_chart = st.checkbox("Show mental health chart")
+        chart_type = st.selectbox("Chart type", ["Line", "Bar"])
+    with cols[1]:
+        breakdown = st.checkbox("Breakdown by week", value=True, key='mh_breakdown_checkbox', disabled=chart_type == "Line")
+    cols = st.columns(2)
+    with cols[0]:
         field = st.selectbox("Indicator", ["anxious_freq", "worry_freq", "depressed_freq", "little_interest_freq"])
     with cols[1]:
-        breakdown = st.checkbox("Breakdown by week", value=True, key='mh_breakdown_checkbox')
-        layering = st.selectbox("Stacking",
-                                ["none", "income", "gender", "age_group", "marital_status", "hhld_num_persons", "received_EIP"],
+        layering = st.selectbox("Additional breakdown",
+                                ["none", "income", "gender", "race", "age_group", "marital_status", "hhld_num_persons", "received_EIP"],
                                 index=0,
                                 key='mh_breakdown_select')
     
     if show_chart:
-        chart = alt.Chart(df.loc[~pd.isna(df[field]), [field, 'week'] + ([layering] if layering != 'none' else [])]).mark_bar()
-        if breakdown:
+        if chart_type == "Line":
+            data_to_show = df[~pd.isna(df[field])]
+
+            data_to_show = data_to_show.groupby(['week'] + ([layering] if layering != 'none' else [])).agg({field: 'mean'}).reset_index()
+            
+            chart = alt.Chart(data_to_show).mark_line()
+            # chart = alt.Chart(df.loc[~pd.isna(df[field]), [field, 'week'] + ([layering] if layering != 'none' else [])]).mark_bar()
             chart = chart.encode(
                 x='week:N',
-                y='count()',
-                column=f'{field}:O',
-                tooltip=['week', 'count()', field]
-            )
-        else:
-            chart = chart.encode(
-                x=f'{field}:O',
-                y='count()',
-                tooltip=[field, 'count()']
-            )
-        if layering != 'none':
-            chart = chart.encode(color=alt.Color(f'{layering}:O', sort=ORDERS.get(layering, 'ascending')),
-                                 tooltip=[layering, field, 'count()'] + (['week'] if breakdown else []))
-        elif breakdown:
-            chart = chart.encode(color='week:N')
+                y=alt.Y(field, scale=alt.Scale(domain=(1, 4))),
+                tooltip=['week', field]
+            ).properties(width=400)
+            if layering != 'none':
+                chart = chart.encode(color=alt.Color(f"{layering}:{ENCODINGS.get(layering, 'O')}", sort=ORDERS.get(layering, 'ascending')),
+                                     tooltip=[layering, field, count_field] + (['week'] if breakdown else [])) 
+                            
+        elif chart_type == "Bar":
+            data_to_show = df[~pd.isna(df[field])]
+
+            count_field = 'val_count' if not percentage else 'val_fraction'
+            data_to_show = (data_to_show
+                            .groupby(['week'] + ([layering] if layering != 'none' else []))[field]
+                            .value_counts(normalize=percentage)
+                            .reset_index(name=count_field))
+            
+            chart = alt.Chart(data_to_show).mark_bar()
+            # chart = alt.Chart(df.loc[~pd.isna(df[field]), [field, 'week'] + ([layering] if layering != 'none' else [])]).mark_bar()
+            if breakdown:
+                chart = chart.encode(
+                    x='week:N',
+                    y=count_field,
+                    column=f'{field}:O',
+                    tooltip=['week', count_field, field]
+                )
+            else:
+                chart = chart.encode(
+                    x=f'{field}:O',
+                    y=count_field,
+                    tooltip=[field, count_field]
+                )
+            if layering != 'none':
+                chart = chart.encode(row=alt.Row(f"{layering}:{ENCODINGS.get(layering, 'O')}", sort=ORDERS.get(layering, 'ascending')),
+                                        color='week:N',
+                                    tooltip=[layering, field, count_field] + (['week'] if breakdown else []))
+                chart = chart.properties(height=150)
+            elif breakdown:
+                chart = chart.encode(color='week:N')
 
 if chart is not None:
     st.altair_chart(chart)
