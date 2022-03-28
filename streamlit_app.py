@@ -120,7 +120,7 @@ each qualifying dependent, including adult dependents.
 
 ### Dataset
 
-In this workshop, you will be using an extended version of the Household Pulse
+In this workshop, you will study the effect of EIPs using an extended version of the Household Pulse
 Survey dataset, which you may recognize from the Interactivity Lab. The dataset
 now includes survey responses from four two-week time periods:
 
@@ -129,7 +129,33 @@ now includes survey responses from four two-week time periods:
 * Week 27: March 17 - March 29 *(two months after the second EIP, during the third EIP rollout)*
 * Week 28: April 14 - April 26 *(one month after the third EIP)*
 
-Unfortunately, some data on who had received the first round of EIPs is unavailable in Week 20.
+Unfortunately, data on who had received the first round of EIPs is unavailable in Week 20.
+
+### Instructions
+
+You will form teams and be assigned to be either "pro"-stimulus or "anti"-stimulus.
+Your task is to create a persuasive, narrative slide deck in Google Slides that uses
+visualizations inspired by the ones on this page to argue your point of view.
+
+1. Individually **explore the dataset** below and begin to identify some visualizations
+   that could be used to help make your assigned case.
+2. As a group, **pitch and decide on 3 or more visualizations** that you want to create.
+   There are two other teams working on the same side as you, so try to make your
+   visualizations unique! Consider the following areas:
+
+    * How did the EIPs affect Americans' spending and saving behavior?
+    * How did EIPs affect Americans' emotional and mental health?
+    * How did EIPs affect different subgroups of the population differently?
+
+3. **Create the visualizations.** You can screenshot the charts from this page and
+   apply additional annotations or modifications, or you can download the data
+   used to generate each chart and create your own version in a charting tool of
+   your choice. You are encouraged to collaborate!
+4. **Compile the visualizations** you've created into a Google slide deck. Make
+   sure each visualization has a persuasive title and caption.
+5. One person from the team should **submit the link to the Google Slides presentation**
+   on [this form](https://forms.gle/Qk39sTze1EcXQYXt8).
+
 """)
 
 st.header("Slice Data")
