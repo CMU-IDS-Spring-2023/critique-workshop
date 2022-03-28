@@ -510,7 +510,7 @@ ranging from 1 to 4.""")
             ).properties(width=400)
             if layering != 'none':
                 chart = chart.encode(color=alt.Color(f"{layering}:{ENCODINGS.get(layering, 'O')}", sort=ORDERS.get(layering, 'ascending')),
-                                     tooltip=[layering, field, count_field] + (['week'] if breakdown else [])) 
+                                     tooltip=[layering, field] + (['week'] if breakdown else [])) 
                             
         elif chart_type == "Bar":
             data_to_show = df[~pd.isna(df[field])]
