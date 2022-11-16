@@ -121,8 +121,7 @@ each qualifying dependent, including adult dependents.
 ### Dataset
 
 In this workshop, you will study the effect of EIPs using an extended version of the Household Pulse
-Survey dataset, which you may recognize from the Interactivity Lab. The dataset
-now includes survey responses from four two-week time periods:
+Survey dataset. The dataset now includes survey responses from four two-week time periods:
 
 * Week 20: November 25 - December 7 2020 *(8 months after the first EIP, just before the second EIP)*
 * Week 25: February 17 - March 1 *(two months after the second EIP, just before the third EIP)*
@@ -133,13 +132,13 @@ Unfortunately, data on who had received the first round of EIPs is unavailable i
 
 ### Instructions
 
-You will form teams and be assigned to be either "pro"-stimulus or "anti"-stimulus.
+You will choose to be either "pro"-stimulus or "anti"-stimulus.
 Your task is to create a persuasive, narrative slide deck in Google Slides that uses
 visualizations inspired by the ones on this page to argue your point of view.
 
 1. Individually **explore the dataset** below and begin to identify some visualizations
    that could be used to help make your assigned case.
-2. As a group, **pitch and decide on 3 or more visualizations** that you want to create.
+2. As a group in class or individually if you are doing this asychronously, **pitch and decide on 3 or more visualizations** that you want to create.
    There are two other teams working on the same side as you, so try to make your
    visualizations unique! Consider the following areas:
 
@@ -153,8 +152,9 @@ visualizations inspired by the ones on this page to argue your point of view.
    your choice. You are encouraged to collaborate!
 4. **Compile the visualizations** you've created into a Google slide deck. Make
    sure each visualization has a persuasive title and caption.
-5. One person from the team should **submit the link to the Google Slides presentation**
-   on [this form](https://forms.gle/Qk39sTze1EcXQYXt8).
+5. Verify the slide deck is sharable among Andrew CMU users.
+You should **submit the link to the Google Slides presentation**
+   on [this form](https://forms.gle/xaVkL5wmej75YHgQA).
 
 """)
 
