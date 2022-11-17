@@ -129,6 +129,7 @@ Survey dataset. The dataset now includes survey responses from four two-week tim
 * Week 28: April 14 - April 26 *(one month after the third EIP)*
 
 Unfortunately, data on who had received the first round of EIPs is unavailable in Week 20.
+Data can be found here: https://drive.google.com/file/d/1ij3QNFYQtKw7a_ZO1w5vrmg3uG0EQeE6/view?usp=sharing
 
 ### Instructions
 
