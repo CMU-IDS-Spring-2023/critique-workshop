@@ -89,7 +89,7 @@ st.title("Are Economic Impact Payments effective?")
 st.write("""
 The Economic Impact Payments (EIP), also known as the stimulus checks, are
 direct relief payments paid directly to
-Americans during the COVID-19 crisis. In this Critique Workshop, you will
+Americans during the COVID-19 crisis. In this Ethics Workshop, you will
 select and/or develop visualizations to construct an argument about **whether or
 not the EIPs have been effective at supporting Americans, and if similar
 strategies should be used in future public emergencies.**
@@ -140,8 +140,7 @@ visualizations inspired by the ones on this page to argue your point of view.
 1. Individually **explore the dataset** below and begin to identify some visualizations
    that could be used to help make your assigned case.
 2. As a group in class or individually if you are doing this asychronously, **pitch and decide on 3 or more visualizations** that you want to create.
-   There are two other teams working on the same side as you, so try to make your
-   visualizations unique! Consider the following areas:
+   Try to make your visualizations unique! Consider the following areas:
 
     * How did the EIPs affect Americans' spending and saving behavior?
     * How did EIPs affect Americans' emotional and mental health?
@@ -150,11 +149,10 @@ visualizations inspired by the ones on this page to argue your point of view.
 3. **Create the visualizations.** You can screenshot the charts from this page and
    apply additional annotations or modifications, or you can download the data
    used to generate each chart and create your own version in a charting tool of
-   your choice. You are encouraged to collaborate!
+   your choice. Add a few sentences about how the visualization supports your side.
 4. **Compile the visualizations** you've created into a Google slide deck. Make
    sure each visualization has a persuasive title and caption.
-5. Verify the slide deck is sharable among Andrew CMU users.
-You should **submit the link to the Google Slides presentation**
+5. Verify the slide deck is sharable among Andrew CMU users. You should **submit the link to the Google Slides presentation**
    on [this form](https://forms.gle/xaVkL5wmej75YHgQA).
 
 """)
