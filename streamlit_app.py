@@ -153,7 +153,7 @@ visualizations inspired by the ones on this page to argue your point of view.
 4. **Compile the visualizations** you've created into a Google slide deck. Make
    sure each visualization has a persuasive title and caption.
 5. Verify the slide deck is sharable among Andrew CMU users. You should **submit the link to the Google Slides presentation**
-   on [this form](https://forms.gle/xaVkL5wmej75YHgQA).
+   on [this form](https://forms.gle/jXMBA3KUEWo7HAkA7).
 
 """)
 
